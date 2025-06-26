@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 // import Student from './models/student.js';
 import studentRouter from './routes/studentRouter.js';
 import productRouter from './routes/productRouter.js';
+import userRouter from './routes/userRoute.js';
 // mongodb+srv://admin:123@cluster0.bjxqvw0.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0
 
 const app = express();
@@ -19,6 +20,7 @@ mongoose.connect('mongodb+srv://admin:123@cluster0.bjxqvw0.mongodb.net/dev?retry
 app.use('/students', studentRouter);
 
 app.use('/products', productRouter);
+app.use('/users', (userRouter));
 
 // app.get('/', (request, response) => {
 //     Student.find()
