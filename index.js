@@ -20,7 +20,7 @@ mongoose.connect('mongodb+srv://admin:123@cluster0.bjxqvw0.mongodb.net/dev?retry
 app.use('/students', studentRouter);
 
 app.use('/products', productRouter);
-app.use('/users', (userRouter));
+app.use('/users', userRouter);
 
 // app.get('/', (request, response) => {
 //     Student.find()
