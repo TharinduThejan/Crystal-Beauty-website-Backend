@@ -1,14 +1,38 @@
-import express from 'express';
+import express, { request, response } from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 // import Student from './models/student.js';
 import studentRouter from './routes/studentRouter.js';
 import productRouter from './routes/productRouter.js';
 import userRouter from './routes/userRoute.js';
+import jwt, { decode } from 'jsonwebtoken';
 // mongodb+srv://admin:123@cluster0.bjxqvw0.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0
 
 const app = express();
 app.use(bodyParser.json());
+
+app.use((request, response, next) => {
+    const tokenString = request.headers["authorization"]
+    if (tokenString != null) {
+        const token = tokenString.replace("Bearer ", "");
+        // console.log(token)
+        jwt.verify(token, "cbc-batch-five#@2025", (error, decoded) => {
+            if (decoded != null) {
+                console.log(decoded)
+                request.user = decoded; // Store the decoded token in the request object
+                next(); // Call next to continue to the next middleware or route handler
+            } else {
+                console.log("Invalid token");
+                response.status(403).json({
+                    message: 'Invalid token'
+                });
+            }
+        });
+    }
+    else {
+        next()
+    }
+});
 mongoose.connect('mongodb+srv://admin:123@cluster0.bjxqvw0.mongodb.net/dev?retryWrites=true&w=majority&appName=Cluster0')
     .then(() => {
         console.log('Connected to MongoDB');

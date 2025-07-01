@@ -6,5 +6,5 @@ const productSchema = mongoose.Schema({
     description: String,
 });
 
-const Product = mongoose.model('products ', productSchema);
+const Product = mongoose.model('products', productSchema);
 export default Product;
