@@ -10,13 +10,13 @@ export function getProducts(request, response) {
 }
 export function saveProduct(request, response) {
     if (request.user == null) {
-        return response.status(401).json({
+        response.status(401).json({
             message: 'Unauthorized'
         });
         return;
     }
     if (request.user.role !== 'admin') {
-        return response.status(403).json({
+        response.status(403).json({
             message: 'You need to be an admin'
         });
         return;
