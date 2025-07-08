@@ -1,12 +1,18 @@
 import Product from "../models/product.js";
-export function getProducts(request, response) {
-    Product.find()
-        .then((data) => {
-            response.json(data);
-        })
-        .catch((error) => {
-            response.status(500).json({ message: 'Error retrieving products', error });
-        });
+export async function getProducts(request, response) {
+    // Product.find()
+    //     .then((data) => {
+    //         response.json(data);
+    //     })
+    //     .catch((error) => {
+    //         response.status(500).json({ message: 'Error retrieving products', error });
+    //     });
+    try {
+        const products = await Product.find();
+        response.json(products);
+    } catch (error) {
+        response.status(500).json({ message: 'Error retrieving products', error });
+    }
 }
 export function saveProduct(request, response) {
     if (request.user == null) {
