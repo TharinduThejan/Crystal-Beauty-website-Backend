@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 
 const productSchema = mongoose.Schema({
-    productId:{
+    productId: {
         type: String,
         required: true,
         unique: true
     },
-    name:{
+    name: {
         type: String,
         required: true
     },
@@ -33,11 +33,11 @@ const productSchema = mongoose.Schema({
     stock: {
         type: Number,
         required: true
-    },isAvailable: {
+    }, isAvailable: {
         type: Boolean,
         required: true,
         default: true
-    }
+    },
 });
 
 const Product = mongoose.model('products', productSchema);
