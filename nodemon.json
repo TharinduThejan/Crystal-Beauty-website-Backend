@@ -1,6 +1,0 @@
-﻿{
-  "verbose": true,
-  "watch": ["index.js"],
-  "ext": "js,json"
-}
-
