@@ -1,3 +1,5 @@
+// Utility function to check if the user is admin
+
 import User from '../models/user.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -83,4 +85,15 @@ export function loginUser(request, response) {
             }
         }
         )
+}
+
+export function isAdmin(request) {
+    if (request.user == null) {
+        return false;
+    }
+    if (request.user.role !== 'admin') {
+        return false;
+    } else {
+        return true;
+    }
 }
