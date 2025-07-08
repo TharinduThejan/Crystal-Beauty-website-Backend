@@ -9,8 +9,13 @@ export async function getProducts(request, response) {
     //         response.status(500).json({ message: 'Error retrieving products', error });
     //     });
     try {
-        const products = await Product.find();
-        response.json(products);
+        if (isAdmin(request)) {
+            const products = await Product.find();
+            response.json(products);
+        } else {
+            const products = await Product.find({ isAvailable: true });
+            response.json(products);
+        }
     } catch (error) {
         response.status(500).json({ message: 'Error retrieving products', error });
     }
@@ -41,4 +46,23 @@ export function saveProduct(request, response) {
                 message: 'Error adding product'
             });
         });
+}
+export async function deleteProduct(request, response) {
+    if (!isAdmin(request)) {
+        response.status(403).json({
+            message: 'You are not authorized to delete products'
+        });
+        return
+    }
+    try {
+        await Product.deleteOne({ productId: request.params.productId })
+        response.json({
+            message: 'Product deleted successfully'
+        })
+    } catch (error) {
+        response.status(500).json({
+            message: 'Error deleting product',
+            error: error
+        });
+    }
 }
