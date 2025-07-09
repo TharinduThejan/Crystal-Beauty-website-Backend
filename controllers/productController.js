@@ -1,3 +1,4 @@
+import { request, response } from "express";
 import Product from "../models/product.js";
 import { isAdmin } from "./userController.js";
 export async function getProducts(request, response) {
@@ -86,6 +87,47 @@ export async function updateProduct(request, response) {
     } catch (error) {
         response.status(500).json({
             message: 'Internal server error',
+            error: error
+        });
+    }
+
+}
+export async function getProductById(request, response) {
+    const productId = request.params.productId;
+
+    try {
+        const product = await Product.findOne(
+            { productId: productId }
+        )
+        // If product is not found, return null
+        if (product == null) {
+            response.status(404).json({
+                message: 'Product not found'
+            })
+            return
+        }
+        // If product is found, return the product-> is Available=true
+        if (product.isAvailable) {
+            response.json(product);
+
+            // If the product is available=true, not admin, return the product
+        } else {
+            if (!isAdmin(request)) {
+                response.status(404).json({
+                    message: 'Product not found'
+                })
+                return
+            }
+            // If the product is not available,isAdmin=true, return the product
+            else {
+                response.json(product);
+            }
+
+        }
+
+    } catch (error) {
+        response.status(500).json({
+            message: 'Error retrieving product',
             error: error
         });
     }
