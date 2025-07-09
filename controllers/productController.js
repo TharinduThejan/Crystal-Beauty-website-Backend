@@ -66,3 +66,28 @@ export async function deleteProduct(request, response) {
         });
     }
 }
+export async function updateProduct(request, response) {
+    if (!isAdmin(request)) {
+        response.status(403).json({
+            message: 'You are not authorized to update products'
+        });
+        return
+    }
+    const productId = request.params.productId;
+    const updateData = request.body;
+
+    try {
+        await Product.updateOne(
+            { productId: productId },
+            updateData);
+        response.json({
+            message: 'Product updated successfully'
+        });
+    } catch (error) {
+        response.status(500).json({
+            message: 'Internal server error',
+            error: error
+        });
+    }
+
+}
