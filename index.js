@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import productRouter from './routes/productRouter.js';
 import userRouter from './routes/userRoute.js';
 import jwt, { decode } from 'jsonwebtoken';
+import orderRouter from './routes/orderRouter.js';
 // mongodb+srv://admin:123@cluster0.bjxqvw0.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0
 
 const app = express();
@@ -43,6 +44,7 @@ mongoose.connect('mongodb+srv://admin:123@cluster0.bjxqvw0.mongodb.net/dev?retry
 
 app.use('/products', productRouter);
 app.use('/users', userRouter);
+app.use('/orders', orderRouter);
 
 // app.get('/', (request, response) => {
 //     Student.find()
