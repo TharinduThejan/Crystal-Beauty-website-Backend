@@ -7,8 +7,8 @@ import userRouter from './routes/userRoute.js';
 import jwt, { decode } from 'jsonwebtoken';
 import orderRouter from './routes/orderRouter.js';
 import cors from 'cors';
-
-
+import dotenv from 'dotenv';
+dotenv.config();
 // mongodb+srv://admin:123@cluster0.bjxqvw0.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0
 
 
@@ -38,7 +38,7 @@ app.use((request, response, next) => {
         next()
     }
 });
-mongoose.connect('mongodb+srv://admin:123@cluster0.bjxqvw0.mongodb.net/dev?retryWrites=true&w=majority&appName=Cluster0')
+mongoose.connect(process.env.MONGODB_URI)
     .then(() => {
         console.log('Connected to MongoDB');
     })
