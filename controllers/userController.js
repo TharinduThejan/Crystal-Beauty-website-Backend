@@ -70,7 +70,7 @@ export function loginUser(request, response) {
                             role: user.role,
                             img: user.img
                         },
-                        "cbc-batch-five#@2025"
+                        process.env.JWT_SECRET
                     )
                     response.json({
                         message: 'Login successful',

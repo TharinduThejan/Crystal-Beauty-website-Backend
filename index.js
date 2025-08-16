@@ -21,7 +21,7 @@ app.use((request, response, next) => {
     if (tokenString != null) {
         const token = tokenString.replace("Bearer ", "");
         // console.log(token)
-        jwt.verify(token, "cbc-batch-five#@2025", (error, decoded) => {
+        jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
             if (decoded != null) {
                 console.log(decoded)
                 request.user = decoded; // Store the decoded token in the request object
