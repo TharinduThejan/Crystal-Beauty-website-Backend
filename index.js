@@ -6,9 +6,14 @@ import productRouter from './routes/productRouter.js';
 import userRouter from './routes/userRoute.js';
 import jwt, { decode } from 'jsonwebtoken';
 import orderRouter from './routes/orderRouter.js';
+import cors from 'cors';
+
+
 // mongodb+srv://admin:123@cluster0.bjxqvw0.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0
 
+
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
 
 app.use((request, response, next) => {
@@ -42,9 +47,9 @@ mongoose.connect('mongodb+srv://admin:123@cluster0.bjxqvw0.mongodb.net/dev?retry
     });
 
 
-app.use('/products', productRouter);
-app.use('/users', userRouter);
-app.use('/orders', orderRouter);
+app.use('/api/products', productRouter);
+app.use('/api/users', userRouter);
+app.use('/api/orders', orderRouter);
 
 // app.get('/', (request, response) => {
 //     Student.find()
