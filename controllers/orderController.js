@@ -93,3 +93,36 @@ export async function createOrder(request, response) {
     //create order object
 
 }
+export async function getOrders(request, response) {
+    if (request.user == null) {
+        response.status(400).json({
+            message: "Please login and try again"
+        })
+        return;
+    }
+    try {
+        if (request.user.isAdmin) {
+            const orders = await Order.find().sort({ date: -1 });
+            response.status(200).json({
+                message: "Orders fetched successfully",
+                orders: orders
+            });
+            return;
+        }
+        else {
+            const orders = await Order.find({ email: request.user.email }).sort({ date: -1 });
+            response.status(200).json({
+                message: "Orders fetched successfully",
+                orders: orders
+            });
+            return;
+        }
+    }
+    catch (err) {
+        response.status(500).json({
+            message: "Error fetching orders",
+            error: err
+        });
+        return;
+    }
+}
