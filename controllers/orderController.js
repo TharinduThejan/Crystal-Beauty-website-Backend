@@ -1,6 +1,7 @@
 
 import Order from "../models/order.js";
 import Product from "../models/product.js";
+import { isAdmin } from "./userController.js";
 
 
 
@@ -125,4 +126,32 @@ export async function getOrders(request, response) {
         });
         return;
     }
+}
+export async function updateOrderStatus(request, response) {
+    if (!isAdmin(request)) {
+        response.status(403).json({
+            message: 'You are not authorized to update order status'
+        })
+        return;
+    }
+    try {
+        const orderId = request.params.orderId;
+        const status = request.params.status;
+
+        await Order.updateOne(
+            {
+                orderId: orderId
+            },
+            { status: status }
+        );
+        response.json({
+            message: 'Order status updated successfully'
+        });
+    } catch (error) {
+        response.status(500).json({
+            message: 'Error updating order status',
+            error: error
+        });
+    }
+
 }
