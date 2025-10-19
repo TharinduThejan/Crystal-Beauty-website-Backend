@@ -133,3 +133,21 @@ export async function getProductById(request, response) {
     }
 
 }
+export async function searchProducts(request, response) {
+    const searchquery = request.params.query;
+    try {
+        const products = await Product.find({
+            $or: [
+                { name: { $regex: searchquery, $options: 'i' } },
+                { altNames: { $elemMatch: { $regex: searchquery, $options: 'i' } } },
+            ],
+            isAvailable: true
+        })
+        response.json(products);
+    } catch (error) {
+        response.status(500).json({
+            message: 'Error searching products',
+            error: error
+        });
+    }
+}
