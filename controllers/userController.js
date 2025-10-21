@@ -295,6 +295,21 @@ export async function resetPassword(req, res) {
     }
 }
 
+export function getUser(request, response) {
+    if (request.user == null) {
+        response.status(401).json({
+            message: 'You are not logged in'
+        });
+        return;
+    } else {
+        response.json({
+            ...request.user
+        });
+    }
+}
+
+
+
 export function isAdmin(request) {
     if (request.user == null) {
         return false;
