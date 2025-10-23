@@ -1,6 +1,12 @@
 import { request, response } from "express";
 import Product from "../models/product.js";
 import { isAdmin } from "./userController.js";
+import dotenv from 'dotenv';
+import Stripe from 'stripe';
+dotenv.config();
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
 export async function getProducts(request, response) {
     // Product.find()
     //     .then((data) => {
@@ -151,3 +157,66 @@ export async function searchProducts(request, response) {
         });
     }
 }
+// export async function StripeCheckout(req, res) {
+//     const stripeInstance = new Stripe(process.env.VITE_STRIPE_SECRET_KEY);
+//     const { products } = req.body;
+//     const lineItems = products.map((product) => ({
+//         price_data: {
+//             currency: 'USD',
+//             product_data: {
+//                 name: product.name,
+//                 images: [Array.isArray(product.images) ? product.images[0] : product.images],
+//             },
+//             unit_amount: Math.round(product.price * 100),
+//         },
+//         quantity: product.qty,
+//     }));
+//     const session = await stripeInstance.checkout.sessions.create({
+//         payment_method_types: ['card'],
+//         line_items: lineItems,
+//         mode: 'payment',
+//         success_url: 'http://localhost:5173/checkout/success',
+//         cancel_url: 'http://localhost:5173/checkout/cancel',
+//     });
+//     res.json({
+//         id: session.id
+//     });
+
+// // }
+
+export const StripeCheckout = async (req, res) => {
+    try {
+        console.log("Stripe Checkout called");
+        const { products } = req.body;
+
+        // Validate
+        if (!products || products.length === 0) {
+            return res.status(400).json({ error: "No products provided" });
+        }
+
+        // ✅ Use USD for testing (LKR not supported)
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ["card"],
+            mode: "payment",
+            line_items: products.map((item) => ({
+                price_data: {
+                    currency: "usd", // use USD for Stripe testing
+                    product_data: {
+                        name: item.name,
+                        images: [item.images],
+                    },
+                    unit_amount: Math.max(item.price * 100, 50), // min 50 cents
+                },
+                quantity: item.qty,
+            })),
+            success_url: "http://localhost:5173/success",
+            cancel_url: "http://localhost:5173/cancel",
+        });
+
+        console.log("✅ Stripe session created successfully");
+        res.json({ id: session.id, url: session.url });
+    } catch (error) {
+        console.error("❌ Stripe error:", error);
+        res.status(500).json({ error: error.message });
+    }
+};

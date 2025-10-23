@@ -9,6 +9,8 @@ import orderRouter from './routes/orderRouter.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
+import Stripe from 'stripe';
+
 // mongodb+srv://admin:123@cluster0.bjxqvw0.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0
 
 
@@ -50,6 +52,8 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use('/api/products', productRouter);
 app.use('/api/users', userRouter);
 app.use('/api/orders', orderRouter);
+
+
 
 // app.get('/', (request, response) => {
 //     Student.find()
