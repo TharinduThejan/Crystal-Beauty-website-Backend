@@ -79,6 +79,7 @@ export function loginUser(request, response) {
                         token: token,
                         role: user.role
                     })
+                    console.log(response);
                 }
                 else {
                     response.status(401).json({
@@ -320,3 +321,63 @@ export function isAdmin(request) {
         return true;
     }
 }
+export async function deleteUser(request, response) {
+    if (!isAdmin(request)) {
+        response.status(403).json({
+            message: 'You are not authorized to delete users'
+        });
+        return;
+    }
+    const userId = request.params.userId;
+
+    try {
+        await User.deleteOne({ _id: userId });
+        response.json({
+            message: 'User deleted successfully'
+        });
+    } catch (error) {
+        response.status(500).json({
+            message: 'Internal server error',
+            error: error
+        });
+    }
+}
+export async function getAllUsers(request, response) {
+    if (!isAdmin(request)) {
+        response.status(403).json({
+            message: 'You are not authorized to view users'
+        });
+        return;
+    }
+    try {
+        const users = await User.find({}, '-password');
+        response.json(users);
+    } catch (err) {
+        response.status(500).json({ error: err.message });
+    }
+};
+
+export async function updateUser(request, response) {
+    if (!isAdmin(request)) {
+        response.status(403).json({
+            message: 'You are not authorized to view users'
+        });
+        return;
+    }
+    const userId = request.params.userId;
+    const updateData = request.body;
+    try {
+        await User.updateOne(
+            { _id: userId },
+            updateData);
+        response.json({
+            message: 'User updated successfully'
+        });
+    } catch (error) {
+        response.status(500).json({
+            message: 'Internal server error',
+            error: error
+        });
+    }
+}
+
